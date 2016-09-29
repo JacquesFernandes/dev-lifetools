@@ -44,7 +44,8 @@ def get_todo_list():
     cursor = conn.execute("SELECT rowid,item,status FROM Todo;");
     rows = cursor.fetchall();
     display_rows(rows);
-    return;
+    conn.close();
+    return(rows);
 
 def display_rows(rows):
     if len(rows) == 0:
@@ -59,6 +60,7 @@ def display_rows(rows):
     return;
 
 def add_todo_item():
+    get_todo_list();
     conn = sqlite3.connect("list.db");
     note = input("Enter the new note : ");
     conn.cursor().execute("INSERT INTO Todo (item,status) VALUES ('"+note+"','false');");
@@ -66,10 +68,7 @@ def add_todo_item():
     conn.close();
 
 def rem_todo_item():
-    conn = sqlite3.connect("list.db");
-    res = conn.cursor().execute("SELECT rowid,item,status FROM Todo");
-    rows = res.fetchall();
-    display_rows(rows);
+    rows = get_todo_list();
     rn = int(input("Enter id of note to delete : "));
     if rn not in list(i for i in range(1,len(rows)+1)):
         #old_print("len : ",len(rows));
@@ -95,6 +94,7 @@ def menu():
 
 ''' MAIN '''
 if __name__ == "__main__":
+    os.system("clear");
     op = startup_check();
     while (op[0] == False):
         if ".db" in op[1]:
