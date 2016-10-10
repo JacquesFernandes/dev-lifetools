@@ -75,6 +75,7 @@ def rem_todo_item():
         old_print("Invalid input...");
         return;
     old_print(" :: NOTE :: will delete '"+rows[rn-1][1]+"' ...");
+    conn = sqlite.connect("list.db");
     conn.cursor().execute("DELETE FROM Todo WHERE rowid="+str(rn));
     conn.commit();
     conn.close();
